@@ -13,6 +13,7 @@ public class UpgradeMenu : MonoBehaviour
     private int[] _priceFactor = { 10, 25, 50, 100, 250, 500, 1000, 5000, 9999 };
     private bool _isActivated;
     private const int _ActivatedIdleFarmPrice = 9999;
+    private const int _OneAttempt = 99;
 
     private List<GameObject> _listGameObjects = new List<GameObject>();
     private VerticalLayoutGroup _group;
@@ -23,6 +24,9 @@ public class UpgradeMenu : MonoBehaviour
     public GameObject content;
     public AudioSource audioSource;
     public AudioClip clickSound;
+
+    private int attemptsForRoulette;
+    private int attemptsForFlappyCoin;
 
     private void Start()
     {
@@ -38,7 +42,13 @@ public class UpgradeMenu : MonoBehaviour
         SetUpgrades();
 
         _listGameObjects[1].GetComponentsInChildren<Text>()[1].text = _ActivatedIdleFarmPrice.ToString() + "$";
+        _listGameObjects[2].GetComponentsInChildren<Text>()[1].text = _OneAttempt.ToString() + "$";
+        _listGameObjects[3].GetComponentsInChildren<Text>()[1].text = _OneAttempt.ToString() + "$";
         CheckSoldUpgrade();
+
+
+        attemptsForRoulette = PlayerPrefs.HasKey("attempts for roulette") ? PlayerPrefs.GetInt("attempts for roulette") : 0;
+        attemptsForFlappyCoin = PlayerPrefs.HasKey("attempts for flappy coin") ? PlayerPrefs.GetInt("attempts for flappy coin") : 0;
     }
 
     private void RemovedList()
@@ -86,6 +96,36 @@ public class UpgradeMenu : MonoBehaviour
             case 1:
                 ActivatedAutoClick();
                 break;
+
+            case 2:
+                BuyOneAttemptForRoulette();
+                break;
+
+            case 3:
+                BuyOneAttemptForFlappyCoin();
+                break;
+        }
+    }
+
+    private void BuyOneAttemptForRoulette()
+    {
+        if (_balance >= _OneAttempt)
+        {
+            _balance -= _OneAttempt;
+            PlayerPrefs.SetInt("balance", _balance);
+            PlayerPrefs.SetInt("attempts for roulette", attemptsForRoulette + 1);
+            attemptsForRoulette = PlayerPrefs.GetInt("attempts for roulette");
+        }
+    }
+
+    private void BuyOneAttemptForFlappyCoin()
+    {
+        if (_balance >= _OneAttempt)
+        {
+            _balance -= _OneAttempt;
+            PlayerPrefs.SetInt("balance", _balance);
+            PlayerPrefs.SetInt("attempts for flappy coin", attemptsForFlappyCoin + 1);
+            attemptsForFlappyCoin = PlayerPrefs.GetInt("attempts for flappy coin");
         }
     }
 
@@ -152,10 +192,5 @@ public class UpgradeMenu : MonoBehaviour
     public void ToMainMenu()
     {
         SceneManager.LoadScene(0);
-    }
-
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.DeleteKey("volume");
     }
 }

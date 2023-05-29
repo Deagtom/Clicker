@@ -1,9 +1,11 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
+    public Slider slider;
+
     public void ToMenu()
     {
         SceneManager.LoadScene(0);
@@ -16,8 +18,15 @@ public class SettingsMenu : MonoBehaviour
         PlayerPrefs.SetInt("factor", 1);
     }
 
-    private void OnApplicationQuit()
+    private void Awake()
     {
-        PlayerPrefs.DeleteKey("volume");
+        slider.value = PlayerPrefs.GetFloat("volume");
+    }
+
+    private void Update()
+    {
+        PlayerPrefs.SetFloat("volume", slider.value);
+        PlayerPrefs.Save();
+        AudioListener.volume = slider.value;
     }
 }

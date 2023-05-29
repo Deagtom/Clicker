@@ -14,8 +14,14 @@ public class MainMenu : MonoBehaviour
     public GameObject effect;
     public GameObject button;
 
+    [SerializeField] private int _countClick = 0;
+    [SerializeField] private float _delay = 5;
+
+    private Animator _animator;
+
     private void Start()
     {
+        Time.timeScale = 1f;
         _balance = PlayerPrefs.GetInt("balance");
         _factor = PlayerPrefs.GetInt("factor") != 0 ? PlayerPrefs.GetInt("factor") : 1;
         PlayerPrefs.SetInt("factor", _factor);
@@ -27,6 +33,15 @@ public class MainMenu : MonoBehaviour
         }
 
         GetOfflineBalance();
+
+        if (!PlayerPrefs.HasKey("volume"))
+        {
+            AudioListener.volume = 1f;
+        }
+        else
+        {
+            AudioListener.volume = PlayerPrefs.GetFloat("volume");
+        }
     }
 
     public void ButtonClick()
@@ -35,6 +50,7 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("balance", _balance);
         Instantiate(effect, button.GetComponent<RectTransform>().position.normalized, Quaternion.identity);
         button.GetComponent<RectTransform>().localScale = new Vector3(0.95f, 0.95f, 0f);
+        _countClick++;
     }
 
     public void OnClickUp()
@@ -83,7 +99,6 @@ public class MainMenu : MonoBehaviour
 #else
     private void OnApplicationQuit()
     {
-        PlayerPrefs.DeleteKey("volume");
         PlayerPrefs.SetString("last session", DateTime.Now.ToString());
     }
 #endif
@@ -105,9 +120,36 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetString("last session", DateTime.Now.ToString());
         SceneManager.LoadScene(3);
     }
+    private IEnumerator AnimatorStop()
+    {
+        yield return new WaitForSeconds(1.5f);
+        _animator.enabled = false;
+    }
 
-    private void Update()
+    private void IsAutoclickerUsed()
+    {
+        if (_delay > 0)
+        {
+            _delay -= Time.fixedDeltaTime;
+
+            if (_delay <= 0)
+            {
+                if (_countClick > 150f)
+                {
+                    _animator = GetComponent<Animator>();
+                    _animator.enabled = true;
+                    StartCoroutine(AnimatorStop());
+                    _balance = 0;
+                }
+                _countClick = 0;
+                _delay = 5f;
+            }
+        }
+    }
+
+    private void FixedUpdate()
     {
         ShowBalance();
+        IsAutoclickerUsed();
     }
 }

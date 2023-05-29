@@ -410,9 +410,13 @@ MonoBehaviour:
   arrayTitles:
   - Improve clicker by one
   - Get coin per second
+  - One attempt for "Roulette"
+  - one attempt for "Flappy Coin"
   arraySprites:
   - {fileID: 21300000, guid: fcde8c9f8ab405c43ab61f0123c5f1b4, type: 3}
   - {fileID: 21300000, guid: 5ffda55901e73da41b91a6e1c2a481a3, type: 3}
+  - {fileID: 21300000, guid: 711cfd8f392c8e740aa38b1aad087946, type: 3}
+  - {fileID: 21300000, guid: 711cfd8f392c8e740aa38b1aad087946, type: 3}
   button: {fileID: 2769364350167254849, guid: 9469200c439710142967024db8072930, type: 3}
   content: {fileID: 681861011}
   audioSource: {fileID: 681861015}
@@ -993,6 +997,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
