@@ -317,8 +317,6 @@ MonoBehaviour:
   balanceText: {fileID: 510081833}
   effect: {fileID: 8738801728762239936, guid: d8f514fe8c98f9b439b8851e47bbc4fc, type: 3}
   button: {fileID: 1471753036}
-  _countClick: 0
-  _delay: 5
 --- !u!82 &519420034
 AudioSource:
   m_ObjectHideFlags: 0
@@ -430,6 +428,8 @@ MonoBehaviour:
   audioSource: {fileID: 519420034}
   clickSound: {fileID: 8300000, guid: 84de237fb9c4bed4b95e089f82679500, type: 3}
   coinSound: {fileID: 8300000, guid: 38c6eabd04f250b44a0b6a778caa8ccc, type: 3}
+  touchSound: {fileID: 0}
+  openSound: {fileID: 0}
 --- !u!95 &519420036
 Animator:
   serializedVersion: 5
@@ -719,7 +719,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 828c0b082f46adf4fbc6955b607902f2, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d6359ec6e3233ae429dfa36b5a383763, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1159,7 +1159,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 519420033}
           m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-          m_MethodName: OnClickUp
+          m_MethodName: ButtonClickUp
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

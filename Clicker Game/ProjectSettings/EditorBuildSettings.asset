@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: d0664e838c181d14d9f4e862af7974c3
   - enabled: 1
-    path: Assets/Scenes/UpgradeMenu.unity
+    path: Assets/Scenes/ShopMenu.unity
     guid: d925760b8e579024791ad40cf501b42c
   - enabled: 1
     path: Assets/Scenes/OptionsMenu.unity
@@ -24,6 +24,6 @@ EditorBuildSettings:
     path: Assets/Scenes/GameFlappyCoin.unity
     guid: 1bd33e3dfbb407141a79c3186d79419a
   - enabled: 1
-    path: Assets/Scenes/Game 3.unity
+    path: Assets/Scenes/GameArkanoid.unity
     guid: 3a1c1e3d41d4d194ba295e0c54239bc3
   m_configObjects: {}

@@ -8,6 +8,11 @@ TagManager:
   - Red
   - Pipe
   - Score
+  - Green
+  - Enemy
+  - EnemySecond
+  - EnemyThird
+  - Stick
   layers:
   - Default
   - TransparentFX

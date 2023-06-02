@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,10 +15,7 @@ public class MainMenu : MonoBehaviour
     public GameObject effect;
     public GameObject button;
 
-    [SerializeField] private int _countClick = 0;
-    [SerializeField] private float _delay = 5;
-
-    private Animator _animator;
+    public static bool inGame = false;
 
     private void Start()
     {
@@ -28,20 +26,14 @@ public class MainMenu : MonoBehaviour
 
         _isActivated = PlayerPrefs.GetInt("is activated") == 1 ? true : false;
         if (_isActivated)
-        {
             StartCoroutine(IdleFarm());
-        }
 
         GetOfflineBalance();
 
         if (!PlayerPrefs.HasKey("volume"))
-        {
             AudioListener.volume = 1f;
-        }
         else
-        {
             AudioListener.volume = PlayerPrefs.GetFloat("volume");
-        }
     }
 
     public void ButtonClick()
@@ -50,12 +42,16 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("balance", _balance);
         Instantiate(effect, button.GetComponent<RectTransform>().position.normalized, Quaternion.identity);
         button.GetComponent<RectTransform>().localScale = new Vector3(0.95f, 0.95f, 0f);
-        _countClick++;
     }
 
-    public void OnClickUp()
+    public void ButtonClickUp() => button.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 0f);
+
+    private void ShowBalance()
     {
-        button.GetComponent<RectTransform>().localScale = new Vector3(1f, 1f, 0f);
+        if (_balance >= 1000000)
+            balanceText.text = (_balance / 1000).ToString() + " K";
+        else
+            balanceText.text = _balance.ToString();
     }
 
     private IEnumerator IdleFarm()
@@ -66,25 +62,16 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(IdleFarm());
     }
 
-    private void ShowBalance()
-    {
-        if (_balance >= 1000000)
-        {
-            balanceText.text = (_balance / 1000).ToString() + " K";
-        }
-        else
-        {
-            balanceText.text = _balance.ToString();
-        }
-    }
-
     private void GetOfflineBalance()
     {
         TimeSpan totalSecond;
         if (PlayerPrefs.GetInt("is activated") == 1)
         {
             totalSecond = DateTime.Now - DateTime.Parse(PlayerPrefs.GetString("last session"));
-            _balance += (int)totalSecond.TotalSeconds;
+            if (inGame)
+                _balance += (int)totalSecond.TotalSeconds;
+            else if (!inGame)
+                _balance += (int)totalSecond.TotalSeconds / 10;
         }
     }
 
@@ -92,64 +79,32 @@ public class MainMenu : MonoBehaviour
     private void OnApplicationPause(bool pause)
     {
         if (pause)
-        {
             PlayerPrefs.SetString("last session", DateTime.Now.ToString());
-        }
     }
 #else
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetString("last session", DateTime.Now.ToString());
-    }
+    private void OnApplicationQuit() => PlayerPrefs.SetString("last session", DateTime.Now.ToString());
 #endif
 
     public void ToUpgrades()
     {
+        inGame = true;
         PlayerPrefs.SetString("last session", DateTime.Now.ToString());
         SceneManager.LoadScene(1);
     }
 
     public void ToSettings()
     {
+        inGame = true;
         PlayerPrefs.SetString("last session", DateTime.Now.ToString());
         SceneManager.LoadScene(2);
     }
 
     public void ToLevels()
     {
+        inGame = true;
         PlayerPrefs.SetString("last session", DateTime.Now.ToString());
         SceneManager.LoadScene(3);
     }
-    private IEnumerator AnimatorStop()
-    {
-        yield return new WaitForSeconds(1.5f);
-        _animator.enabled = false;
-    }
 
-    private void IsAutoclickerUsed()
-    {
-        if (_delay > 0)
-        {
-            _delay -= Time.fixedDeltaTime;
-
-            if (_delay <= 0)
-            {
-                if (_countClick > 150f)
-                {
-                    _animator = GetComponent<Animator>();
-                    _animator.enabled = true;
-                    StartCoroutine(AnimatorStop());
-                    _balance = 0;
-                }
-                _countClick = 0;
-                _delay = 5f;
-            }
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        ShowBalance();
-        IsAutoclickerUsed();
-    }
+    private void Update() => ShowBalance();
 }
